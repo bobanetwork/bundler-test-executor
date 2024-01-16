@@ -6,10 +6,19 @@ root=`realpath \`dirname $0\``
 
 BUILD=$root/build
 OUT=$BUILD/out
-test -d bundler-spec-tests || git clone https://github.com/eth-infinitism/bundler-spec-tests.git
+test -d bundler-spec-tests || git clone https://github.com/alchemyplatform/bundler-spec-tests.git
 
 #by default, run all single-bundler configs
 BUNDLERS=`ls $root/bundlers/*/*yml|grep -v p2p`
+
+START_COMMAND="pull-start"
+
+#if first command is local, read docker image from local manifest
+if [ "$1" = "local" ]; then
+START_COMMAND="start"
+shift
+fi
+
 
 #if parameter is given, use it as single-bundler yml, or as testenv file
 if [ -n "$1" -a -r "$1" ]; then
@@ -59,10 +68,9 @@ name=`sed -ne 's/ *NAME=[ "]*\([^"]*\)"*/\1/p' $bundler`
 test -z $name && name=$basename
 
 echo "`date`: starting bundler $bundler, name=$name" | tee -a $outraw
-if $root/runbundler/runbundler.sh $bundler pull-start; then
+if $root/runbundler/runbundler.sh $bundler $START_COMMAND; then
 
   echo "`date`: started bundler $bundler, name=$name" | tee -a $outraw
-
   case "$bunder" in
     *yml) PYTEST_FOLDER=`getEnv $root/runbundler/runbundler.env PYTEST_FOLDER tests/single` ;;
     *env) PYTEST_FOLDER=`getEnv $bundler PYTEST_FOLDER tests/p2p` ;;
@@ -74,7 +82,7 @@ if $root/runbundler/runbundler.sh $bundler pull-start; then
   $PYTEST_FOLDER
   "
   # --log-rpc
-  pdm run test -o junit_suite_name="$name" $OPTIONS "$@" | tee -a $outraw
+  pdm run test --url http://localhost:3000 --ethereum-node http://localhost:8545 -o junit_suite_name="$name" $OPTIONS "$@" | tee -a $outraw
   test -r $outxml && xq . $outxml > $outjson
 
 fi
