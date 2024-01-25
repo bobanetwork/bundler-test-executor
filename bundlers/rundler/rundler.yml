@@ -10,6 +10,7 @@ services:
       - RUST_LOG=info
       - PRIORITY_FEE_MODE_KIND=base_fee_percent
       - PRIORITY_FEE_MODE_VALUE=0
+      - POOL_THROTTLED_ENTITY_LIVE_BLOCKS=20
     ports: 
       - '3000:3000'
       - '8080:8080'
