@@ -33,6 +33,9 @@ To test a single bundler (instead of running all tests):
 - **yml** - the full path to a bundler yml file (e.g. `./bundlers/aabundler/aabundler.yml`)
 - **pytest params** - parameters to pass down to pytest. e.g. "`-k GASP`" or "`-x`"
 
+If you would like to use a local copy of the your bundle manifest you can use the `local` item
+
+`./runall.sh local {yml} {pytest params}`
 
 
 ## Prerequisites
