@@ -11,6 +11,15 @@ OUT=$BUILD/out
 #by default, run all single-bundler configs
 BUNDLERS=`ls $root/bundlers/*/*yml|grep -v p2p`
 
+START_COMMAND="pull-start"
+
+#if first command is local, read docker image from local manifest
+if [ "$1" = "local" ]; then
+START_COMMAND="start"
+shift
+fi
+
+
 #if parameter is given, use it as single-bundler yml, or as testenv file
 if [ -n "$1" -a -r "$1" ]; then
 BUNDLERS=`realpath $1`
@@ -59,7 +68,7 @@ name=`sed -ne 's/ *NAME=[ "]*\([^"]*\)"*/\1/p' $bundler`
 test -z $name && name=$basename
 
 echo "`date`: starting bundler $bundler, name=$name" | tee -a $outraw
-if $root/runbundler/runbundler.sh $bundler pull-start; then
+if $root/runbundler/runbundler.sh $bundler $START_COMMAND; then
 
   echo "`date`: started bundler $bundler, name=$name" | tee -a $outraw
 
