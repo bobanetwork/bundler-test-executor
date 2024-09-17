@@ -8,6 +8,8 @@ BUILD=$root/build
 OUT=$BUILD/out
 #test -d bundler-spec-tests || git clone https://github.com/eth-infinitism/bundler-spec-tests.git -b v07
 
+script_dir=$(dirname "$(realpath "$BASH_SOURCE")")
+
 #by default, run all single-bundler configs
 BUNDLERS=`ls $root/bundlers/*/*yml|grep -v p2p`
 
@@ -26,7 +28,7 @@ BUNDLERS=`realpath $1`
 shift
 fi
 
-cd bundler-spec-tests 
+cd $script_dir/bundler-spec-tests 
 
 #first time must runall.
 test -d .venv || runall=1
