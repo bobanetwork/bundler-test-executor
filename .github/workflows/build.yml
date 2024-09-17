@@ -85,7 +85,10 @@ jobs:
         with:
           path: bundler-spec-tests
           key: ${{ runner.os }}-${{ hashFiles('bundler-spec-tests/pdm.lock', 'bundler-spec-tests/@account-abstraction/contracts/**/*.sol') }}
-
+      
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+  
       - run: cd bundler-spec-tests; git checkout
         name: "re-checkout bundler-spec-tests (on top of cache)"
 
