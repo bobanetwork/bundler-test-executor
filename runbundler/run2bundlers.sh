@@ -9,7 +9,7 @@ if [ -z "$2" ] ; then
        exit 1 
 fi
 
-DC="docker-compose --env-file $dir/run2bundlers.env -f $dir/run2bundlers.yml"
+DC="docker compose --env-file $dir/run2bundlers.env -f $dir/run2bundlers.yml"
 
 export BUNDLER_YML=`realpath $1`
 export BUNDLER2_YML=`realpath $2`
